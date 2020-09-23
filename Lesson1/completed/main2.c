@@ -7,11 +7,11 @@
 map arr[1000];
 int idx = 0;
 
-int readstopw(char **stopw, int *n) {
+void readstopw(char **stopw, int *n) {
     FILE *fin = fopen("stopw.txt", "r");
     if (fin == NULL) {
         printf("Cant open file to read\n");
-        return -1;
+        return;
     }
 
     char buf[1000];
@@ -28,11 +28,11 @@ int readstopw(char **stopw, int *n) {
     fclose(fin);
 }
 
-int readfromfile(char **stopw, int n) {
+void readfromfile(char **stopw, int n) {
     FILE *fin2 = fopen("vanban.txt", "r");
     if (fin2 == NULL) {
         printf("Cant open file to read\n");
-        return -1;
+        return;
     }
 
     char buf[10000];
