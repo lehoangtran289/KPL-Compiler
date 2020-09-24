@@ -48,6 +48,8 @@ void readfromfile(char **stopw, int n) {
 
             char temp[100];
             strcpy(temp, token);
+            for(int i = 0; i < strlen(temp); i++) 
+                temp[i] = tolower(temp[i]);
 
             if (temp[strlen(temp) - 1] == '.')
                 temp[strlen(temp) - 1] = '\0';
