@@ -24,14 +24,14 @@ int addWord(JRB map, char *word, int line, int column) {
 
 void printMap(JRB map) {
     printf("\n\n--- Index detail: \n");
-    JRB node, node2, node3;
+    JRB node, node2, node3;     // iterator node
 
     jrb_traverse(node, map) {
         printf("%s - ", jval_s(node->key));
-        JRB tree = jval_v(node->val);
-        jrb_traverse(node2, tree) {
-            JRB tree2 = jval_v(node2->val);
-            jrb_traverse(node3, tree2) {
+        JRB indexTree = jval_v(node->val);
+        jrb_traverse(node2, indexTree) {
+            JRB colTree = jval_v(node2->val);
+            jrb_traverse(node3, colTree) {
                 printf("(%d, %d) ", node2->key, node3->key);
             }
         }
