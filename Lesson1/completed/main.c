@@ -6,45 +6,44 @@
 #include "dllist.h"
 #include "jrb.h"
 
-int addWord(JRB map, char *word, int line) {
-    printf("%s %d\n", word, line);
-
-    char t[100];
-    strcpy(t, word);
-
-    JRB node = jrb_find_str(map, t);
-
-    char temp[10];
-    sprintf(temp, "%d", line);
+int addWord(JRB map, char *word, int line, int column) {
+    JRB node = jrb_find_str(map, word);
+    JRB indexTree = make_jrb();
+    JRB columnTree = make_jrb();
 
     if (node != NULL) {
-        // char *val = jval_s(node->val);
-        // strcat(val, " ,");
-        // strcat(val, temp);
-        // printf("%s -> val: %s\n", jval_s(node->key), val);
-        // jrb_insert_str(map, word, new_jval_s(val));
+        indexTree = (JRB)jval_v(node->val);
+        jrb_insert_int(indexTree, line, new_jval_v(columnTree));
+        jrb_insert_int(columnTree, column, new_jval_v(NULL));
     } else {
-        printf("herer %s\n", t);
-        jrb_insert_str(map, t, new_jval_s(temp));
+        jrb_insert_str(map, word, new_jval_v(indexTree));
+        jrb_insert_int(indexTree, line, new_jval_v(columnTree));
+        jrb_insert_int(columnTree, column, new_jval_v(NULL));
     }
 }
 
 void printMap(JRB map) {
     printf("\n\n--- Index detail: \n");
-    JRB node;
+    JRB node, node2, node3;
 
     jrb_traverse(node, map) {
-        char *key = jval_s(node->key);
-        char *val = jval_s(node->val);
-        printf("%s\t%s\n", key, val);
+        printf("%s - ", jval_s(node->key));
+        JRB tree = jval_v(node->val);
+        jrb_traverse(node2, tree) {
+            JRB tree2 = jval_v(node2->val);
+            jrb_traverse(node3, tree2) {
+                printf("(%d, %d) ", node2->key, node3->key);
+            }
+        }
+        printf("\n");
     }
 }
 
 // -----------------------------------------------------------------
 
-int contains(char **stopw, int n, char *str) {
-    for (int i = 0; i < n; i++)
-        if (strcmp(stopw[i], str) == 0)
+int contains(char **stopw, int size, char *str) {
+    for (int i = 0; i < size; i++)
+        if (strcasecmp(stopw[i], str) == 0)
             return 1;
     return 0;
 }
@@ -65,7 +64,7 @@ int isName(char *str, int flag) {
 // -----------------------------------------------------------------
 
 int readstopw(char **stopw, int *n) {
-    FILE *fin = fopen("stopw2.txt", "r");
+    FILE *fin = fopen("stopw.txt", "r");
     if (fin == NULL) {
         printf("Cant open file to read\n");
         return -1;
@@ -86,7 +85,7 @@ int readstopw(char **stopw, int *n) {
 }
 
 int readfromfile(JRB map, char **stopw, int n) {
-    FILE *fin2 = fopen("vanban2.txt", "r");
+    FILE *fin2 = fopen("vanban.txt", "r");
     if (fin2 == NULL) {
         printf("Cant open file to read\n");
         return -1;
@@ -100,20 +99,25 @@ int readfromfile(JRB map, char **stopw, int n) {
         buf[strlen(buf) - 1] = '\0';
         // printf("%s\n", buf);
 
+        int column = 0;
         char *token = strtok(buf, " ,()\r\n\t");
-        while (token != NULL) {
+        while (token != NULL) {     
             // printf("%-15scontains: %d - isNumber: %d - isName: %d, flag=%d\n", token, contains(stopw, n, token), isNumber(token), isName(token, flag), flag);
 
-            char temp[100];
-            strcpy(temp, token);
+            char *wordToAdd = (char *)malloc(sizeof(char) * 200);
+            *wordToAdd = '\0';
+            strcat(wordToAdd, token);
 
-            if (temp[strlen(temp) - 1] == '.')
-                temp[strlen(temp) - 1] = '\0';
+            column++;
 
-            if (!contains(stopw, n, temp) && !isNumber(temp) && !isName(temp, flag)) {
-                // printf("%s\n", temp);
-                // TODO
-                addWord(map, temp, line);
+            if (wordToAdd[strlen(wordToAdd) - 1] == '.')
+                wordToAdd[strlen(wordToAdd) - 1] = '\0';
+
+            if (!contains(stopw, n, wordToAdd) && !isNumber(wordToAdd) && !isName(wordToAdd, flag)) {
+                for (int i = 0; i < strlen(wordToAdd); i++)
+                    wordToAdd[i] = tolower(wordToAdd[i]);
+
+                addWord(map, wordToAdd, line, column);
             }
 
             flag = token[strlen(token) - 1] == '.' ? 1 : 0;
@@ -133,11 +137,10 @@ int main() {
     int n;
     readstopw(stopw, &n);
 
-    // printf("--- Stop words:\n");
-    // for (int i = 0; i < n; i++) {
-    //     printf("%d. %s\n", i, stopw[i]);
-    // }
-    // printf("\n\n");
+    printf("--- Stop words:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d. %s\n", i, stopw[i]);
+    }
 
     readfromfile(map, stopw, n);
 

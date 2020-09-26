@@ -1,2 +1,2 @@
- gcc main2.c utils.c
+ gcc main.c dllist.c jrb.c jval.c -w
 ./a.out
