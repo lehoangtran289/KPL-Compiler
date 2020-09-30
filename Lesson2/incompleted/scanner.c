@@ -57,7 +57,7 @@ Token *readIdentKeyword(void) {
 
     Token *token = makeToken(TK_IDENT, ln, cn);
 
-    while(charCodes[currentChar] == CHAR_DIGIT || charCodes[currentChar] == CHAR_LETTER) {
+    while (charCodes[currentChar] == CHAR_DIGIT || charCodes[currentChar] == CHAR_LETTER) {
         if (size >= MAX_IDENT_LEN) {
             token->tokenType = TK_NONE;
             error(ERR_IDENTTOOLONG, ln, cn);
@@ -67,7 +67,7 @@ Token *readIdentKeyword(void) {
         }
         readChar();
     }
-    
+
     token->string[size] = '\0';
     TokenType keyword = checkKeyword(token->string);
     token->tokenType = keyword == TK_NONE ? TK_IDENT : keyword;
@@ -112,11 +112,11 @@ Token *readConstChar(void) {
     int cn = colNo;
     Token *token = makeToken(TK_CHAR, ln, cn);
 
-    readChar();         // read character after '
+    readChar();  // read character after '
     if (charCodes[currentChar] != CHAR_UNKNOWN) {
         token->string[0] = currentChar;
         token->string[1] = '\0';
-        readChar();     // read ending '
+        readChar();  // read ending '
         if (charCodes[currentChar] == CHAR_SINGLEQUOTE) {
             readChar();
             return token;
