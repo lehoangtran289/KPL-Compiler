@@ -30,7 +30,7 @@ typedef struct {
   char string[MAX_IDENT_LEN + 1];
   int lineNo, colNo;
   TokenType tokenType;
-  int value;
+  float value;
 } Token;
 
 TokenType checkKeyword(char *string);

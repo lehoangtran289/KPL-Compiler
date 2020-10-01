@@ -84,25 +84,28 @@ Token *readNumber(void) {
     Token *token = makeToken(TK_NUMBER, ln, cn);
     token->value = 0;
 
-    while (charCodes[currentChar] == CHAR_DIGIT) {
-        int newValue = token->value * 10 + (currentChar - '0');
-
-        if (newValue > INT_MAX) {  // number too long
-            token->tokenType = TK_NONE;
-        } else {
-            token->string[size++] = currentChar;
-            token->value = newValue;
+    int periodCount = 0;  //count # of period in float number
+    token->string[size++] = currentChar;
+    readChar();
+    while (charCodes[currentChar] == CHAR_DIGIT || charCodes[currentChar] == CHAR_PERIOD) {
+        if (charCodes[currentChar] == CHAR_PERIOD) {
+            periodCount++;
+            if (periodCount > 1) {
+                token->tokenType = TK_NONE;
+            }
         }
+        token->string[size++] = currentChar;
         readChar();
     }
 
     if (token->tokenType == TK_NONE) {
-        error(ERR_IDENTTOOLONG, ln, cn);
+        printf("%s not a float!\n", token->string);
         return token;
     }
 
     token->string[size] = '\0';
-
+    // printf("%s %f\n", token->string, atof(token->string));
+    token->value = atof(token->string);
     return token;
 }
 
@@ -140,6 +143,7 @@ Token *getToken(void) {
 
     switch (charCodes[currentChar]) {
         case CHAR_SPACE:
+            // printf("space: %d\n", currentChar);
             skipBlank();
             return getToken();
 
