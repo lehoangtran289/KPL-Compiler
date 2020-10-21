@@ -1,3 +1,10 @@
 Program Example1; (* Example 1 *)
 Begin
-End. (* Example 1 *)
+    1 > 2;
+    10098765
+    999.87600990 
+    123..456
+    'a'
+    !=
+    alsdjlak
+End. 
