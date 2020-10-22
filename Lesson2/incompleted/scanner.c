@@ -72,6 +72,8 @@ Token *readIdentKeyword(void) {
     TokenType keyword = checkKeyword(token->string);
     token->tokenType = keyword == TK_NONE ? TK_IDENT : keyword;
 
+    //printf("- %s ", token->string);
+
     return token;
 }
 
@@ -99,8 +101,14 @@ Token *readNumber(void) {
     }
 
     if (token->tokenType == TK_NONE) {
-        printf("%s not a float!\n", token->string);
-        return token;
+        // printf("%s not a float!\n", token->string);
+        // return token;
+        error(ERR_UNEXPECTEDFLOAT, ln, cn);
+        return makeToken(TK_NONE, ln, cn);
+    }
+
+    if (periodCount == 1) {
+        token->tokenType = TK_FLOAT;
     }
 
     token->string[size] = '\0';
@@ -109,13 +117,48 @@ Token *readNumber(void) {
     return token;
 }
 
+Token *readFloat(Token *token, int ln, int cn) {
+    while (charCodes[currentChar] == CHAR_DIGIT || charCodes[currentChar] == CHAR_PERIOD) {
+        if (charCodes[currentChar] == CHAR_PERIOD) {
+            error(ERR_UNEXPECTEDFLOAT, ln, cn);
+            return makeToken(TK_NONE, ln, cn);
+        }
+    }
+
+    token->tokenType = TK_FLOAT;
+    return token;
+}
+
+Token *readNumber1(void) {
+    int ln = lineNo;
+    int cn = colNo;
+    int size = 0;  // size of token string
+    Token *token = makeToken(TK_NUMBER, ln, cn);
+    token->value = 0;
+    token->string[size++] = currentChar;
+    readChar();
+    while (charCodes[currentChar] == CHAR_DIGIT || charCodes[currentChar] == CHAR_PERIOD) {
+        if (charCodes[currentChar] == CHAR_PERIOD) {
+            return readFloat(token, ln, cn);
+        }
+        token->string[size++] = currentChar;
+        readChar();
+    }
+    
+    token->string[size] = '\0';
+    // printf("%s %f\n", token->string, atof(token->string));
+    token->value = atof(token->string);
+    return token;
+}
+
+
 // TODO
 Token *readConstChar(void) {
     int ln = lineNo;
     int cn = colNo;
     Token *token = makeToken(TK_CHAR, ln, cn);
 
-    readChar();  // read character after '
+    readChar();  // read character after first '
     if (charCodes[currentChar] != CHAR_UNKNOWN) {
         token->string[0] = currentChar;
         token->string[1] = '\0';
@@ -151,7 +194,7 @@ Token *getToken(void) {
             return readIdentKeyword();
 
         case CHAR_DIGIT:
-            return readNumber();
+            return readNumber1();
 
         case CHAR_PLUS:
             token = makeToken(SB_PLUS, lineNo, colNo);
@@ -194,7 +237,7 @@ Token *getToken(void) {
             } else
                 return makeToken(SB_GT, ln, cn);
 
-        case CHAR_EXCLAIMATION:
+        case CHAR_EXCLAIMATION:  // !
             ln = lineNo;
             cn = colNo;
             readChar();
@@ -227,7 +270,7 @@ Token *getToken(void) {
             } else
                 return makeToken(SB_PERIOD, ln, cn);
 
-        case CHAR_COLON:
+        case CHAR_COLON:    // :
             ln = lineNo;
             cn = colNo;
             readChar();
@@ -288,6 +331,9 @@ void printToken(Token *token) {
         case TK_NUMBER:
             printf("TK_NUMBER(%s)\n", token->string);
             break;
+        case TK_FLOAT:
+            printf("TK_FLOAT(%s)\n", token->string);
+            break;
         case TK_CHAR:
             printf("TK_CHAR(\'%s\')\n", token->string);
             break;
@@ -309,6 +355,9 @@ void printToken(Token *token) {
             break;
         case KW_INTEGER:
             printf("KW_INTEGER\n");
+            break;
+        case KW_FLOAT:
+            printf("KW_FLOAT\n");
             break;
         case KW_CHAR:
             printf("KW_CHAR\n");

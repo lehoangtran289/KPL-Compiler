@@ -12,13 +12,14 @@ typedef enum {
   ERR_IDENTTOOLONG,
   ERR_INVALIDCHARCONSTANT,
   ERR_INVALIDSYMBOL,
+  ERR_UNEXPECTEDFLOAT,
 } ErrorCode;
-
 
 #define ERM_ENDOFCOMMENT "End of comment expected!"
 #define ERM_IDENTTOOLONG "Identification too long!"
 #define ERM_INVALIDCHARCONSTANT "Invalid const char!"
 #define ERM_INVALIDSYMBOL "Invalid symbol!"
+#define ERM_UNEXPECTEDFLOAT "err: Float number expected!"
 
 void error(ErrorCode err, int lineNo, int colNo);
 

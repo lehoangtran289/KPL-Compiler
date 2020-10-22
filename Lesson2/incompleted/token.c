@@ -17,6 +17,7 @@ struct {
     {"CONST", KW_CONST},
     {"TYPE", KW_TYPE},
     {"VAR", KW_VAR},
+    {"FLOAT", KW_FLOAT},
     {"INTEGER", KW_INTEGER},
     {"CHAR", KW_CHAR},
     {"ARRAY", KW_ARRAY},
@@ -46,9 +47,12 @@ int keywordEq(char *kw, char *string) {
 // Check whether a string is a keyword or not
 TokenType checkKeyword(char *string) {
     int i;
-    for (i = 0; i < KEYWORDS_COUNT; i++)
-        if (keywordEq(keywords[i].string, string))
+    for (i = 0; i < KEYWORDS_COUNT; i++) {
+        // printf("%s %s\n", keywords[i].string, string);
+        if (keywordEq(keywords[i].string, string)) {
             return keywords[i].tokenType;
+        }
+    }
     return TK_NONE;
 }
 
