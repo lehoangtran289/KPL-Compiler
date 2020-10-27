@@ -117,15 +117,21 @@ Token *readNumber(void) {
     return token;
 }
 
-Token *readFloat(Token *token, int ln, int cn) {
-    while (charCodes[currentChar] == CHAR_DIGIT || charCodes[currentChar] == CHAR_PERIOD) {
-        if (charCodes[currentChar] == CHAR_PERIOD) {
-            error(ERR_UNEXPECTEDFLOAT, ln, cn);
-            return makeToken(TK_NONE, ln, cn);
-        }
+Token *readFloat(Token *token, int size, int ln, int cn) {
+    token->string[size++] = currentChar;
+    readChar();
+    while (charCodes[currentChar] == CHAR_DIGIT) {
+        // if (charCodes[currentChar] == CHAR_PERIOD) {
+        //     error(ERR_UNEXPECTEDFLOAT, ln, cn);
+        //     return makeToken(TK_NONE, ln, cn);
+        // }
+        token->string[size++] = currentChar;
+        readChar();
     }
-
+    
+    token->string[size] = '\0';
     token->tokenType = TK_FLOAT;
+    token->value = atof(token->string);
     return token;
 }
 
@@ -139,18 +145,16 @@ Token *readNumber1(void) {
     readChar();
     while (charCodes[currentChar] == CHAR_DIGIT || charCodes[currentChar] == CHAR_PERIOD) {
         if (charCodes[currentChar] == CHAR_PERIOD) {
-            return readFloat(token, ln, cn);
+            return readFloat(token, size, ln, cn);
         }
         token->string[size++] = currentChar;
         readChar();
     }
     
     token->string[size] = '\0';
-    // printf("%s %f\n", token->string, atof(token->string));
     token->value = atof(token->string);
     return token;
 }
-
 
 // TODO
 Token *readConstChar(void) {

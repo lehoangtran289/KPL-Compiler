@@ -1,6 +1,7 @@
 Program Example2; (* Factorial *)
    
 Var n : Integer;
+Var f : FLOAT;
 
 Function F(n : Integer) : Integer;
   Begin

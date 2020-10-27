@@ -1,10 +1,9 @@
 Program Example1; (* Example 1 *)
+Var n, f : Integer;
+f : float;
 Begin
-    1 > 2;
-    10098765
-    999.87600990 
-    123..456
-    'a'
-    !=
-    alsdjlak
+    n := 2020;
+    f := 20.20;
+    f := 3..1416;
+    f := 01.23;
 End. 
