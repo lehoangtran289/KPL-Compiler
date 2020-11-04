@@ -13,6 +13,7 @@ typedef enum {
   ERR_IDENTTOOLONG,
   ERR_INVALIDCHARCONSTANT,
   ERR_INVALIDSYMBOL,
+  ERR_UNEXPECTEDFLOAT,
   ERR_INVALIDCONSTANT,
   ERR_INVALIDTYPE,
   ERR_INVALIDBASICTYPE,
@@ -34,6 +35,7 @@ typedef enum {
 #define ERM_IDENTTOOLONG "Identification too long!" //ok
 #define ERM_INVALIDCHARCONSTANT "Invalid const char!" //ok
 #define ERM_INVALIDSYMBOL "Invalid symbol!" //ok
+#define ERM_UNEXPECTEDFLOAT "err: Float number expected!"
 #define ERM_INVALIDCONSTANT "Invalid constant!" //ok
 #define ERM_INVALIDTYPE "Invalid type!" //ok
 #define ERM_INVALIDBASICTYPE "Invalid basic type!"  //ok

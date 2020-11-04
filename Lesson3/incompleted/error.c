@@ -23,6 +23,9 @@ void error(ErrorCode err, int lineNo, int colNo) {
         case ERR_INVALIDSYMBOL:
             printf("%d-%d:%s\n", lineNo, colNo, ERM_INVALIDSYMBOL);
             break;
+        case ERR_UNEXPECTEDFLOAT:
+            printf("%d-%d:%s\n", lineNo, colNo, ERM_UNEXPECTEDFLOAT);
+            break;
         case ERR_INVALIDCONSTANT:
             printf("%d-%d:%s\n", lineNo, colNo, ERM_INVALIDCONSTANT);
             break;

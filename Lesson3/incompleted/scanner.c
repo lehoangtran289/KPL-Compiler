@@ -6,6 +6,7 @@
 
 #include "scanner.h"
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -76,17 +77,38 @@ Token *readIdentKeyword(void) {
     return token;
 }
 
-Token *readNumber(void) {
-    Token *token = makeToken(TK_NUMBER, lineNo, colNo);
-    int count = 0;
-
-    while ((currentChar != EOF) && (charCodes[currentChar] == CHAR_DIGIT)) {
-        token->string[count++] = (char)currentChar;
+Token *readFloat(Token *token, int size, int ln, int cn) {
+    token->string[size++] = currentChar;
+    readChar();
+    while (charCodes[currentChar] == CHAR_DIGIT) {
+        token->string[size++] = currentChar;
         readChar();
     }
+    
+    token->string[size] = '\0';
+    token->tokenType = TK_FLOAT;
+    token->value = atof(token->string);
+    return token;
+}
 
-    token->string[count] = '\0';
-    token->value = atoi(token->string);
+Token *readNumber(void) {
+    int ln = lineNo;
+    int cn = colNo;
+    int size = 0;  // size of token string
+    Token *token = makeToken(TK_NUMBER, ln, cn);
+    token->value = 0;
+    token->string[size++] = currentChar;
+    readChar();
+    while (charCodes[currentChar] == CHAR_DIGIT || charCodes[currentChar] == CHAR_PERIOD) {
+        if (charCodes[currentChar] == CHAR_PERIOD) {
+            return readFloat(token, size, ln, cn);
+        }
+        token->string[size++] = currentChar;
+        readChar();
+    }
+    
+    token->string[size] = '\0';
+    token->value = atof(token->string);
     return token;
 }
 
@@ -268,6 +290,9 @@ void printToken(Token *token) {
         case TK_NUMBER:
             printf("TK_NUMBER(%s)\n", token->string);
             break;
+        case TK_FLOAT:
+            printf("TK_FLOAT(%s)\n", token->string);
+            break;
         case TK_CHAR:
             printf("TK_CHAR(\'%s\')\n", token->string);
             break;
@@ -289,6 +314,9 @@ void printToken(Token *token) {
             break;
         case KW_INTEGER:
             printf("KW_INTEGER\n");
+            break;
+        case KW_FLOAT:
+            printf("KW_FLOAT\n");
             break;
         case KW_CHAR:
             printf("KW_CHAR\n");
