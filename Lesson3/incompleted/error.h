@@ -30,24 +30,24 @@ typedef enum {
 } ErrorCode;
 
 
-#define ERM_ENDOFCOMMENT "End of comment expected!"
-#define ERM_IDENTTOOLONG "Identification too long!"
-#define ERM_INVALIDCHARCONSTANT "Invalid const char!"
-#define ERM_INVALIDSYMBOL "Invalid symbol!"
-#define ERM_INVALIDCONSTANT "Invalid constant!"
-#define ERM_INVALIDTYPE "Invalid type!"
-#define ERM_INVALIDBASICTYPE "Invalid basic type!"
-#define ERM_INVALIDPARAM "Invalid parameter!"
-#define ERM_INVALIDSTATEMENT "Invalid statement!"
-#define ERM_INVALIDARGUMENTS "Invalid arguments!"
+#define ERM_ENDOFCOMMENT "End of comment expected!" //ok
+#define ERM_IDENTTOOLONG "Identification too long!" //ok
+#define ERM_INVALIDCHARCONSTANT "Invalid const char!" //ok
+#define ERM_INVALIDSYMBOL "Invalid symbol!" //ok
+#define ERM_INVALIDCONSTANT "Invalid constant!" //ok
+#define ERM_INVALIDTYPE "Invalid type!" //ok
+#define ERM_INVALIDBASICTYPE "Invalid basic type!"  //ok
+#define ERM_INVALIDPARAM "Invalid parameter!"     //ok-
+#define ERM_INVALIDSTATEMENT "Invalid statement!" //ok-
+#define ERM_INVALIDARGUMENTS "Invalid arguments!" //ok-
 #define ERM_INVALIDCOMPARATOR "Invalid comparator!"
-#define ERM_INVALIDEXPRESSION "Invalid expression!"
-#define ERM_INVALIDTERM "Invalid term!"
-#define ERM_INVALIDFACTOR "Invalid factor!"
-#define ERM_INVALIDCONSTDECL "Invalid constant declaration!"
-#define ERM_INVALIDTYPEDECL "Invalid type declaration!"
-#define ERM_INVALIDVARDECL "Invalid variable declaration!"
-#define ERM_INVALIDSUBDECL "Invalid subroutine declaration!"
+#define ERM_INVALIDEXPRESSION "Invalid expression!" //ok-
+#define ERM_INVALIDTERM "Invalid term!" //ok-
+#define ERM_INVALIDFACTOR "Invalid factor!" //ok
+#define ERM_INVALIDCONSTDECL "Invalid constant declaration!"  //ok
+#define ERM_INVALIDTYPEDECL "Invalid type declaration!" //ok
+#define ERM_INVALIDVARDECL "Invalid variable declaration!"  //ok
+#define ERM_INVALIDSUBDECL "Invalid subroutine declaration!"  //ok?
 
 void error(ErrorCode err, int lineNo, int colNo);
 void missingToken(TokenType tokenType, int lineNo, int colNo);

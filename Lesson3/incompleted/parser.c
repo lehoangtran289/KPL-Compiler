@@ -76,9 +76,7 @@ void compileBlock3(void) {
 }
 
 void compileBlock4(void) {
-    // if (lookAhead->tokenType == KW_FUNCTION || lookAhead->tokenType == KW_PROCEDURE) {
-        compileSubDecls();
-    // }
+    compileSubDecls();
     compileBlock5();
 }
 
@@ -105,10 +103,18 @@ void compileConstDecls(void) {
 
 void compileConstDecl(void) {
     // TODO
-    eat(TK_IDENT);
-    eat(SB_EQ);
-    compileConstant();
-    eat(SB_SEMICOLON);
+    switch (lookAhead->tokenType) {
+        case TK_IDENT:
+            eat(TK_IDENT);
+            eat(SB_EQ);
+            compileConstant();
+            eat(SB_SEMICOLON);
+            break;
+
+        default:
+            error(ERR_INVALIDCONSTDECL, lookAhead->lineNo, lookAhead->colNo);
+            break;
+    }
 }
 
 void compileTypeDecls(void) {
@@ -126,10 +132,18 @@ void compileTypeDecls(void) {
 
 void compileTypeDecl(void) {
     // TODO
-    eat(TK_IDENT);
-    eat(SB_EQ);
-    compileType();
-    eat(SB_SEMICOLON);
+    switch (lookAhead->tokenType) {
+        case TK_IDENT:
+            eat(TK_IDENT);
+            eat(SB_EQ);
+            compileType();
+            eat(SB_SEMICOLON);
+            break;
+
+        default:
+            error(ERR_INVALIDTYPEDECL, lookAhead->lineNo, lookAhead->colNo);
+            break;
+    }
 }
 
 void compileVarDecls(void) {
@@ -147,28 +161,40 @@ void compileVarDecls(void) {
 
 void compileVarDecl(void) {
     // TODO
-    eat(TK_IDENT);
-    eat(SB_COLON);
-    compileType();
-    eat(SB_SEMICOLON);
+    switch (lookAhead->tokenType) {
+        case TK_IDENT:
+            eat(TK_IDENT);
+            eat(SB_COLON);
+            compileType();
+            eat(SB_SEMICOLON);
+            break;
+
+        default:
+            error(ERR_INVALIDVARDECL, lookAhead->lineNo, lookAhead->colNo);
+            break;
+    }
 }
 
 void compileSubDecls(void) {
     assert("Parsing subtoutines ....");
     // TODO
-    while (lookAhead->tokenType == KW_FUNCTION || lookAhead->tokenType == KW_PROCEDURE) {
-        switch (lookAhead->tokenType) {
-            case KW_FUNCTION:
-                compileFuncDecl();
-                break;
+    switch (lookAhead->tokenType) {
+        case KW_FUNCTION:
+            compileFuncDecl();
+            compileSubDecls();
+            break;
 
-            case KW_PROCEDURE:
-                compileProcDecl();
-                break;
+        case KW_PROCEDURE:
+            compileProcDecl();
+            compileSubDecls();
+            break;
 
-            default:
-                break;
-        }
+        case KW_BEGIN:
+            break;
+
+        default:
+            error(ERR_INVALIDSUBDECL, lookAhead->lineNo, lookAhead->colNo);
+            break;
     }
     assert("Subtoutines parsed ....");
 }
@@ -443,7 +469,7 @@ void compileCallSt(void) {
 
 void compileGroupSt(void) {
     assert("Parsing a group statement ....");
-    // TODO 
+    // TODO
     eat(KW_BEGIN);
     compileStatements();
     eat(KW_END);
@@ -468,7 +494,7 @@ void compileElseSt(void) {
 
 void compileWhileSt(void) {
     assert("Parsing a while statement ....");
-    // TODO 
+    // TODO
     eat(KW_WHILE);
     compileCondition();
     eat(KW_DO);
@@ -478,7 +504,7 @@ void compileWhileSt(void) {
 
 void compileForSt(void) {
     assert("Parsing a for statement ....");
-    // TODO 
+    // TODO
     eat(KW_FOR);
     eat(TK_IDENT);
     eat(SB_ASSIGN);
