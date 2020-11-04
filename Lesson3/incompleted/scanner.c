@@ -291,7 +291,7 @@ void printToken(Token *token) {
             printf("TK_NUMBER(%s)\n", token->string);
             break;
         case TK_FLOAT:
-            printf("TK_FLOAT(%s)\n", token->string);
+            printf("TK_FLOAT(%.2f)\n", token->value);
             break;
         case TK_CHAR:
             printf("TK_CHAR(\'%s\')\n", token->string);

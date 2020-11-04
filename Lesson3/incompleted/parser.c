@@ -233,6 +233,9 @@ void compileUnsignedConstant(void) {
         case TK_NUMBER:
             eat(TK_NUMBER);
             break;
+        case TK_FLOAT:
+            eat(TK_FLOAT);
+            break;
         case TK_IDENT:
             eat(TK_IDENT);
             break;
@@ -275,6 +278,9 @@ void compileConstant2(void) {
         case TK_NUMBER:
             eat(TK_NUMBER);
             break;
+        case TK_FLOAT:
+            eat(TK_FLOAT);
+            break;
 
         default:
             error(ERR_INVALIDCONSTANT, lookAhead->lineNo, lookAhead->colNo);
@@ -289,6 +295,9 @@ void compileType(void) {
     switch (lookAhead->tokenType) {
         case KW_INTEGER:
             eat(KW_INTEGER);
+            break;
+        case KW_FLOAT:
+            eat(KW_FLOAT);
             break;
         case KW_CHAR:
             eat(KW_CHAR);
@@ -699,6 +708,9 @@ void compileFactor(void) {
     switch (lookAhead->tokenType) {
         case TK_NUMBER:
             eat(TK_NUMBER);
+            break;
+        case TK_FLOAT:
+            eat(TK_FLOAT);
             break;
         case TK_CHAR:
             eat(TK_CHAR);
