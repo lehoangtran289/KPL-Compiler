@@ -138,6 +138,8 @@ char *tokenToString(TokenType tokenType) {
             return "\'>\'";
         case SB_GE:
             return "\'>=\'";
+        case SB_MOD:
+            return "\'%\'";
         case SB_PLUS:
             return "\'+\'";
         case SB_MINUS:

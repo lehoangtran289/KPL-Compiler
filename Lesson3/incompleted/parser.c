@@ -640,6 +640,11 @@ void compileExpression3(void) {
             compileTerm();
             compileExpression3();
             break;
+        case SB_MOD:
+            eat(SB_MOD);
+            compileTerm();
+            compileExpression3();
+            break;
 
         case SB_COMMA:
         case SB_SEMICOLON:
@@ -688,6 +693,7 @@ void compileTerm2(void) {
         case KW_DO:
         case SB_RPAR:
         case SB_COMMA:
+        case SB_MOD:
         case SB_EQ:
         case SB_NEQ:
         case SB_LE:

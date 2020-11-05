@@ -195,6 +195,10 @@ Token *getToken(void) {
             token = makeToken(SB_EQ, lineNo, colNo);
             readChar();
             return token;
+        case CHAR_PERCENTAGE:
+            token = makeToken(SB_MOD, lineNo, colNo);
+            readChar();
+            return token;
         case CHAR_EXCLAIMATION:
             ln = lineNo;
             cn = colNo;
@@ -378,6 +382,9 @@ void printToken(Token *token) {
             break;
         case SB_ASSIGN:
             printf("SB_ASSIGN\n");
+            break;
+        case SB_MOD:
+            printf("SB_MOD\n");
             break;
         case SB_EQ:
             printf("SB_EQ\n");
