@@ -158,21 +158,41 @@ Token *getToken(void) {
         case CHAR_DIGIT:
             return readNumber();
         case CHAR_PLUS:
-            token = makeToken(SB_PLUS, lineNo, colNo);
+            ln = lineNo;
+            cn = colNo;
             readChar();
-            return token;
+            if ((currentChar != EOF) && (charCodes[currentChar] == CHAR_EQ)) {
+                readChar();
+                return makeToken(SB_ASSIGN_PLUS, ln, cn);
+            } else
+                return makeToken(SB_PLUS, ln, cn);
         case CHAR_MINUS:
-            token = makeToken(SB_MINUS, lineNo, colNo);
+            ln = lineNo;
+            cn = colNo;
             readChar();
-            return token;
+            if ((currentChar != EOF) && (charCodes[currentChar] == CHAR_EQ)) {
+                readChar();
+                return makeToken(SB_ASSIGN_MINUS, ln, cn);
+            } else
+                return makeToken(SB_MINUS, ln, cn);
         case CHAR_TIMES:
-            token = makeToken(SB_TIMES, lineNo, colNo);
+            ln = lineNo;
+            cn = colNo;
             readChar();
-            return token;
+            if ((currentChar != EOF) && (charCodes[currentChar] == CHAR_EQ)) {
+                readChar();
+                return makeToken(SB_ASSIGN_TIMES, ln, cn);
+            } else
+                return makeToken(SB_TIMES, ln, cn);
         case CHAR_SLASH:
-            token = makeToken(SB_SLASH, lineNo, colNo);
+            ln = lineNo;
+            cn = colNo;
             readChar();
-            return token;
+            if ((currentChar != EOF) && (charCodes[currentChar] == CHAR_EQ)) {
+                readChar();
+                return makeToken(SB_ASSIGN_SLASH, ln, cn);
+            } else
+                return makeToken(SB_SLASH, ln, cn);
         case CHAR_LT:
             ln = lineNo;
             cn = colNo;
@@ -368,6 +388,18 @@ void printToken(Token *token) {
             printf("KW_TO\n");
             break;
 
+        case SB_ASSIGN_PLUS:
+            printf("SB_ASSIGN_PLUS\n");
+            break;
+        case SB_ASSIGN_MINUS:
+            printf("SB_ASSIGN_MINUS\n");
+            break;
+        case SB_ASSIGN_TIMES:
+            printf("SB_ASSIGN_TIMES\n");
+            break;
+        case SB_ASSIGN_SLASH:
+            printf("SB_ASSIGN_SLASH\n");
+            break;
         case SB_SEMICOLON:
             printf("SB_SEMICOLON\n");
             break;

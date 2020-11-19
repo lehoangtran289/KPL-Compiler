@@ -116,6 +116,14 @@ char *tokenToString(TokenType tokenType) {
         case KW_TO:
             return "keyword TO";
 
+        case SB_ASSIGN_PLUS:
+            return "\'+=\'";
+        case SB_ASSIGN_MINUS:
+            return "\'-=\'";
+        case SB_ASSIGN_TIMES:
+            return "\'*=\'";
+        case SB_ASSIGN_SLASH:
+            return "\'/=\'";
         case SB_SEMICOLON:
             return "\';\'";
         case SB_COLON:

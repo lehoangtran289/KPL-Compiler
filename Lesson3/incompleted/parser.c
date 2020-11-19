@@ -343,6 +343,7 @@ void compileBasicType(void) {
 
 void compileParams(void) {
     // TODO
+    assert("parsing params");
     switch (lookAhead->tokenType) {
         case SB_LPAR:
             eat(SB_LPAR);
@@ -358,6 +359,7 @@ void compileParams(void) {
             error(ERR_INVALIDPARAM, lookAhead->lineNo, lookAhead->colNo);
             break;
     }
+    assert("arguments parsed ...");
 }
 
 void compileParams2(void) {
@@ -465,7 +467,27 @@ void compileAssignSt(void) {
     // TODO
     eat(TK_IDENT);
     compileIndexes();
-    eat(SB_ASSIGN);
+
+    switch (lookAhead->tokenType) {
+        case SB_ASSIGN:
+            eat(SB_ASSIGN);
+            break;
+        case SB_ASSIGN_PLUS:
+            eat(SB_ASSIGN_PLUS);
+            break;
+        case SB_ASSIGN_MINUS:
+            eat(SB_ASSIGN_MINUS);
+            break;
+        case SB_ASSIGN_TIMES:
+            eat(SB_ASSIGN_TIMES);
+            break;
+        case SB_ASSIGN_SLASH:
+            eat(SB_ASSIGN_SLASH);
+            break;
+        default:
+            break;
+    }
+
     compileExpression();
     assert("Assign statement parsed ....");
 }
@@ -531,6 +553,7 @@ void compileForSt(void) {
 // ------------------------------------------------------------
 
 void compileArguments(void) {
+    assert("parsing arguments");
     // TODO
     switch (lookAhead->tokenType) {
         case SB_LPAR:
@@ -539,13 +562,15 @@ void compileArguments(void) {
             compileArguments2();
             eat(SB_RPAR);
             break;
+
+        // check the FOLLOW set
         case SB_SEMICOLON:
-        case KW_END:
             break;
         default:
             error(ERR_INVALIDARGUMENTS, lookAhead->lineNo, lookAhead->colNo);
             break;
     }
+    assert("arguments parsed ...");
 }
 
 void compileArguments2(void) {
@@ -563,12 +588,14 @@ void compileArguments2(void) {
 }
 
 void compileCondition(void) {
+    assert("parsing condition");
     // TODO
     compileExpression();
     compileCondition2();
 }
 
 void compileCondition2(void) {
+    assert("parsing condition2");
     // TODO
     switch (lookAhead->tokenType) {
         case SB_EQ:
@@ -597,8 +624,10 @@ void compileCondition2(void) {
             break;
 
         default:
+            error(ERR_INVALIDCOMPARATOR, lookAhead->lineNo, lookAhead->colNo);
             break;
     }
+    assert("condition2 parsed");
 }
 
 void compileExpression(void) {
@@ -628,24 +657,29 @@ void compileExpression2(void) {
 }
 
 void compileExpression3(void) {
+    // assert("exp3");
     // TODO
     switch (lookAhead->tokenType) {
         case SB_PLUS:
+            // assert("exp31");
             eat(SB_PLUS);
             compileTerm();
             compileExpression3();
             break;
         case SB_MINUS:
+            // assert("exp32");
             eat(SB_MINUS);
             compileTerm();
             compileExpression3();
             break;
         case SB_MOD:
+            // assert("exp33");
             eat(SB_MOD);
             compileTerm();
             compileExpression3();
             break;
 
+        // check the FOLLOW set
         case SB_COMMA:
         case SB_SEMICOLON:
         case SB_RPAR:
@@ -664,6 +698,7 @@ void compileExpression3(void) {
         default:
             error(ERR_INVALIDEXPRESSION, lookAhead->lineNo, lookAhead->colNo);
     }
+    assert("exp3 parsed");
 }
 
 void compileTerm(void) {
@@ -685,6 +720,11 @@ void compileTerm2(void) {
             compileFactor();
             compileTerm2();
             break;
+        case SB_MOD:
+            eat(SB_MOD);
+            compileFactor();
+            compileTerm2();
+            break;
 
         // check the FOLLOW set
         case SB_PLUS:
@@ -693,7 +733,6 @@ void compileTerm2(void) {
         case KW_DO:
         case SB_RPAR:
         case SB_COMMA:
-        case SB_MOD:
         case SB_EQ:
         case SB_NEQ:
         case SB_LE:
