@@ -674,7 +674,6 @@ void compileExpression3(void) {
         // check the FOLLOW set
         case SB_COMMA:
         case SB_SEMICOLON:
-        case KW_END:
         case KW_TO:
         case KW_THEN:
         case KW_DO:
