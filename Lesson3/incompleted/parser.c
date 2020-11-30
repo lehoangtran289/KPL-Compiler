@@ -403,14 +403,12 @@ void compileParam(void) {
 // ------------------------------------------------------------
 
 void compileStatements(void) {
-    // printf("stms\n");
     // TODO
     compileStatement();
     compileStatements2();
 }
 
 void compileStatements2(void) {
-    // printf("stms2\n");
     // TODO
     switch (lookAhead->tokenType) {
         case SB_SEMICOLON:
@@ -423,14 +421,12 @@ void compileStatements2(void) {
             break;
 
         default:
-            // printf("stm2\n");
             missingToken(SB_SEMICOLON, lookAhead->lineNo, lookAhead->colNo);
             break;
     }
 }
 
 void compileStatement(void) {
-    // printf("stm\n");
     switch (lookAhead->tokenType) {
         case TK_IDENT:
             compileAssignSt();
@@ -657,23 +653,19 @@ void compileExpression2(void) {
 }
 
 void compileExpression3(void) {
-    // assert("exp3");
     // TODO
     switch (lookAhead->tokenType) {
         case SB_PLUS:
-            // assert("exp31");
             eat(SB_PLUS);
             compileTerm();
             compileExpression3();
             break;
         case SB_MINUS:
-            // assert("exp32");
             eat(SB_MINUS);
             compileTerm();
             compileExpression3();
             break;
         case SB_MOD:
-            // assert("exp33");
             eat(SB_MOD);
             compileTerm();
             compileExpression3();
@@ -682,18 +674,19 @@ void compileExpression3(void) {
         // check the FOLLOW set
         case SB_COMMA:
         case SB_SEMICOLON:
+        case KW_END:
+        case KW_TO:
+        case KW_THEN:
+        case KW_DO:
         case SB_RPAR:
         case SB_RSEL:
-        case KW_TO:
-        case KW_DO:
-        case KW_THEN:
-        case KW_ELSE:
         case SB_EQ:
         case SB_NEQ:
         case SB_LE:
         case SB_LT:
         case SB_GE:
         case SB_GT:
+        case KW_ELSE:
             break;
         default:
             error(ERR_INVALIDEXPRESSION, lookAhead->lineNo, lookAhead->colNo);
