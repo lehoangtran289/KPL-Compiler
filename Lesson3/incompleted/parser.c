@@ -403,6 +403,7 @@ void compileParam(void) {
 // ------------------------------------------------------------
 
 void compileStatements(void) {
+    assert("compile statement");
     // TODO
     compileStatement();
     compileStatements2();
@@ -561,6 +562,8 @@ void compileArguments(void) {
 
         // check the FOLLOW set
         case SB_SEMICOLON:
+        case KW_ELSE:
+        case KW_END:
             break;
         default:
             error(ERR_INVALIDARGUMENTS, lookAhead->lineNo, lookAhead->colNo);
@@ -584,14 +587,12 @@ void compileArguments2(void) {
 }
 
 void compileCondition(void) {
-    assert("parsing condition");
     // TODO
     compileExpression();
     compileCondition2();
 }
 
 void compileCondition2(void) {
-    assert("parsing condition2");
     // TODO
     switch (lookAhead->tokenType) {
         case SB_EQ:
@@ -623,7 +624,6 @@ void compileCondition2(void) {
             error(ERR_INVALIDCOMPARATOR, lookAhead->lineNo, lookAhead->colNo);
             break;
     }
-    assert("condition2 parsed");
 }
 
 void compileExpression(void) {
@@ -690,7 +690,6 @@ void compileExpression3(void) {
         default:
             error(ERR_INVALIDEXPRESSION, lookAhead->lineNo, lookAhead->colNo);
     }
-    assert("exp3 parsed");
 }
 
 void compileTerm(void) {
