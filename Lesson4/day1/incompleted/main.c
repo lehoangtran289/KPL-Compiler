@@ -29,8 +29,16 @@ int main() {
     obj->constAttrs->value = makeCharConstant('a');
     declareObject(obj);
 
+    obj = createConstantObject("c3");
+    obj->constAttrs->value = makeFloatConstant(3.1416);
+    declareObject(obj);
+
     obj = createTypeObject("t1");
     obj->typeAttrs->actualType = makeArrayType(10, makeIntType());
+    declareObject(obj);
+
+    obj = createTypeObject("t2");
+    obj->typeAttrs->actualType = makeFloatType();
     declareObject(obj);
 
     obj = createVariableObject("v1");
@@ -38,17 +46,21 @@ int main() {
     declareObject(obj);
 
     obj = createVariableObject("v2");
+    obj->varAttrs->type = makeFloatType();
+    declareObject(obj);
+
+    obj = createVariableObject("v3");
     obj->varAttrs->type = makeArrayType(10, makeArrayType(10, makeIntType()));
     declareObject(obj);
 
     obj = createFunctionObject("f");
-    obj->funcAttrs->returnType = makeIntType();
+    obj->funcAttrs->returnType = makeFloatType();
     declareObject(obj);
 
     enterBlock(obj->funcAttrs->scope);
 
     obj = createParameterObject("p1", PARAM_VALUE, symtab->currentScope->owner);
-    obj->paramAttrs->type = makeIntType();
+    obj->paramAttrs->type = makeFloatType();
     declareObject(obj);
 
     obj = createParameterObject("p2", PARAM_REFERENCE, symtab->currentScope->owner);
@@ -71,11 +83,11 @@ int main() {
     declareObject(obj);
 
     obj = createConstantObject("c3");
-    obj->constAttrs->value = makeIntConstant(10);
+    obj->constAttrs->value = makeFloatConstant(10.1416);
     declareObject(obj);
 
     obj = createTypeObject("t1");
-    obj->typeAttrs->actualType = makeIntType();
+    obj->typeAttrs->actualType = makeFloatType();
     declareObject(obj);
 
     obj = createTypeObject("t2");
