@@ -20,6 +20,7 @@ void freeReferenceList(ObjectNode* objList);
 SymTab* symtab;
 Type* intType;
 Type* charType;
+Type* floatType;
 
 /******************* Type utilities ******************************/
 
@@ -32,6 +33,12 @@ Type* makeIntType(void) {
 Type* makeCharType(void) {
     Type* type = (Type*)malloc(sizeof(Type));
     type->typeClass = TP_CHAR;
+    return type;
+}
+
+Type* makeFloatType(void) {
+    Type* type = (Type*)malloc(sizeof(Type));
+    type->typeClass = TP_FLOAT;
     return type;
 }
 
@@ -70,6 +77,7 @@ void freeType(Type* type) {
     switch (type->typeClass) {
         case TP_INT:
         case TP_CHAR:
+        case TP_FLOAT:
             free(type);
             break;
         case TP_ARRAY:
@@ -95,14 +103,25 @@ ConstantValue* makeCharConstant(char ch) {
     return value;
 }
 
-ConstantValue* duplicateConstantValue(ConstantValue* v) {
+ConstantValue* makeFloatConstant(float f) {
+    // TODO
     ConstantValue* value = (ConstantValue*)malloc(sizeof(ConstantValue));
-    value->type = v->type;
-    if (v->type == TP_INT)
-        value->intValue = v->intValue;
-    else
-        value->charValue = v->charValue;
+    value->type = TP_FLOAT;
+    value->floatValue = f;
     return value;
+}
+
+ConstantValue* duplicateConstantValue(ConstantValue* v) {
+    ConstantValue* resultValue = (ConstantValue*)malloc(sizeof(ConstantValue));
+    resultValue->type = v->type;  //no pointer -> no need duplicate type
+
+    if (v->type == TP_INT)
+        resultValue->intValue = v->intValue;
+    else if (v->type == TP_CHAR)
+        resultValue->charValue = v->charValue;
+    else if (v->type == TP_FLOAT)
+        resultValue->floatValue = v->floatValue;
+    return resultValue;
 }
 
 /******************* Object utilities ******************************/
@@ -284,6 +303,10 @@ void initSymTab(void) {
     obj->funcAttrs->returnType = makeIntType();
     addObject(&(symtab->globalObjectList), obj);
 
+    obj = createFunctionObject("READF");
+    obj->funcAttrs->returnType = makeFloatType();
+    addObject(&(symtab->globalObjectList), obj);
+
     obj = createProcedureObject("WRITEI");
     param = createParameterObject("i", PARAM_VALUE, obj);
     param->paramAttrs->type = makeIntType();
@@ -296,11 +319,18 @@ void initSymTab(void) {
     addObject(&(obj->procAttrs->paramList), param);
     addObject(&(symtab->globalObjectList), obj);
 
+    obj = createProcedureObject("WRITEF");
+    param = createParameterObject("f", PARAM_VALUE, obj);
+    param->paramAttrs->type = makeFloatType();
+    addObject(&(obj->procAttrs->paramList), param);
+    addObject(&(symtab->globalObjectList), obj);
+
     obj = createProcedureObject("WRITELN");
     addObject(&(symtab->globalObjectList), obj);
 
     intType = makeIntType();
     charType = makeCharType();
+    floatType = makeFloatType();
 }
 
 void cleanSymTab(void) {
@@ -309,6 +339,7 @@ void cleanSymTab(void) {
     free(symtab);
     freeType(intType);
     freeType(charType);
+    freeType(floatType);
 }
 
 void enterBlock(Scope* scope) {
