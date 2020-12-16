@@ -32,6 +32,8 @@ enum ParamKind {
 
 struct Type_ {
   enum TypeClass typeClass;
+
+  // Use for type Array
   int arraySize;
   struct Type_ *elementType;
 };
