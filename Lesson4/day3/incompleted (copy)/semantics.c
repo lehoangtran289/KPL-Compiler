@@ -114,7 +114,7 @@ Object* checkDeclaredLValueIdent(char* name) {
             break;
         case OBJ_FUNCTION:
             if (obj != symtab->currentScope->owner)
-                error(ERR_INVALID_IDENT, currentToken->lineNo, currentToken->colNo);
+                error(ERR_UNDECLARED_FUNCTION, currentToken->lineNo, currentToken->colNo);
             break;
         default:
             error(ERR_INVALID_IDENT, currentToken->lineNo, currentToken->colNo);
