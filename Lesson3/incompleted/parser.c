@@ -233,6 +233,9 @@ void compileUnsignedConstant(void) {
         case TK_NUMBER:
             eat(TK_NUMBER);
             break;
+        case TK_FLOAT:
+            eat(TK_FLOAT);
+            break;
         case TK_IDENT:
             eat(TK_IDENT);
             break;
@@ -275,6 +278,9 @@ void compileConstant2(void) {
         case TK_NUMBER:
             eat(TK_NUMBER);
             break;
+        case TK_FLOAT:
+            eat(TK_FLOAT);
+            break;
 
         default:
             error(ERR_INVALIDCONSTANT, lookAhead->lineNo, lookAhead->colNo);
@@ -289,6 +295,9 @@ void compileType(void) {
     switch (lookAhead->tokenType) {
         case KW_INTEGER:
             eat(KW_INTEGER);
+            break;
+        case KW_FLOAT:
+            eat(KW_FLOAT);
             break;
         case KW_CHAR:
             eat(KW_CHAR);
@@ -317,6 +326,9 @@ void compileBasicType(void) {
         case KW_INTEGER:
             eat(KW_INTEGER);
             break;
+        case KW_FLOAT:
+            eat(KW_FLOAT);
+            break;
         case KW_CHAR:
             eat(KW_CHAR);
             break;
@@ -331,6 +343,7 @@ void compileBasicType(void) {
 
 void compileParams(void) {
     // TODO
+    assert("parsing params");
     switch (lookAhead->tokenType) {
         case SB_LPAR:
             eat(SB_LPAR);
@@ -346,6 +359,7 @@ void compileParams(void) {
             error(ERR_INVALIDPARAM, lookAhead->lineNo, lookAhead->colNo);
             break;
     }
+    assert("arguments parsed ...");
 }
 
 void compileParams2(void) {
@@ -389,14 +403,13 @@ void compileParam(void) {
 // ------------------------------------------------------------
 
 void compileStatements(void) {
-    // printf("stms\n");
+    assert("compile statement");
     // TODO
     compileStatement();
     compileStatements2();
 }
 
 void compileStatements2(void) {
-    // printf("stms2\n");
     // TODO
     switch (lookAhead->tokenType) {
         case SB_SEMICOLON:
@@ -409,14 +422,12 @@ void compileStatements2(void) {
             break;
 
         default:
-            // printf("stm2\n");
             missingToken(SB_SEMICOLON, lookAhead->lineNo, lookAhead->colNo);
             break;
     }
 }
 
 void compileStatement(void) {
-    // printf("stm\n");
     switch (lookAhead->tokenType) {
         case TK_IDENT:
             compileAssignSt();
@@ -453,7 +464,27 @@ void compileAssignSt(void) {
     // TODO
     eat(TK_IDENT);
     compileIndexes();
-    eat(SB_ASSIGN);
+
+    switch (lookAhead->tokenType) {
+        case SB_ASSIGN:
+            eat(SB_ASSIGN);
+            break;
+        case SB_ASSIGN_PLUS:
+            eat(SB_ASSIGN_PLUS);
+            break;
+        case SB_ASSIGN_MINUS:
+            eat(SB_ASSIGN_MINUS);
+            break;
+        case SB_ASSIGN_TIMES:
+            eat(SB_ASSIGN_TIMES);
+            break;
+        case SB_ASSIGN_SLASH:
+            eat(SB_ASSIGN_SLASH);
+            break;
+        default:
+            break;
+    }
+
     compileExpression();
     assert("Assign statement parsed ....");
 }
@@ -519,6 +550,7 @@ void compileForSt(void) {
 // ------------------------------------------------------------
 
 void compileArguments(void) {
+    assert("parsing arguments");
     // TODO
     switch (lookAhead->tokenType) {
         case SB_LPAR:
@@ -527,13 +559,17 @@ void compileArguments(void) {
             compileArguments2();
             eat(SB_RPAR);
             break;
+
+        // check the FOLLOW set
         case SB_SEMICOLON:
+        case KW_ELSE:
         case KW_END:
             break;
         default:
             error(ERR_INVALIDARGUMENTS, lookAhead->lineNo, lookAhead->colNo);
             break;
     }
+    assert("arguments parsed ...");
 }
 
 void compileArguments2(void) {
@@ -585,6 +621,7 @@ void compileCondition2(void) {
             break;
 
         default:
+            error(ERR_INVALIDCOMPARATOR, lookAhead->lineNo, lookAhead->colNo);
             break;
     }
 }
@@ -628,21 +665,27 @@ void compileExpression3(void) {
             compileTerm();
             compileExpression3();
             break;
+        case SB_MOD:
+            eat(SB_MOD);
+            compileTerm();
+            compileExpression3();
+            break;
 
+        // check the FOLLOW set
         case SB_COMMA:
         case SB_SEMICOLON:
+        case KW_TO:
+        case KW_THEN:
+        case KW_DO:
         case SB_RPAR:
         case SB_RSEL:
-        case KW_TO:
-        case KW_DO:
-        case KW_THEN:
-        case KW_ELSE:
         case SB_EQ:
         case SB_NEQ:
         case SB_LE:
         case SB_LT:
         case SB_GE:
         case SB_GT:
+        case KW_ELSE:
             break;
         default:
             error(ERR_INVALIDEXPRESSION, lookAhead->lineNo, lookAhead->colNo);
@@ -665,6 +708,11 @@ void compileTerm2(void) {
             break;
         case SB_SLASH:
             eat(SB_SLASH);
+            compileFactor();
+            compileTerm2();
+            break;
+        case SB_MOD:
+            eat(SB_MOD);
             compileFactor();
             compileTerm2();
             break;
@@ -699,6 +747,9 @@ void compileFactor(void) {
     switch (lookAhead->tokenType) {
         case TK_NUMBER:
             eat(TK_NUMBER);
+            break;
+        case TK_FLOAT:
+            eat(TK_FLOAT);
             break;
         case TK_CHAR:
             eat(TK_CHAR);

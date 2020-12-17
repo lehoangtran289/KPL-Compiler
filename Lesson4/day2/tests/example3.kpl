@@ -1,11 +1,11 @@
 PROGRAM  EXAMPLE3;  (* TOWER OF HANOI *)
-VAR  I:INTEGER;  
-     N:INTEGER;  
-     P:INTEGER;  
+VAR  I:Float;  
+     N:Char;  
+     P:Float;  
      Q:INTEGER;
      C:CHAR;
 
-PROCEDURE  HANOI(N:INTEGER;  S:INTEGER;  Z:INTEGER);
+PROCEDURE  HANOI(N:INTEGER;  S:Float;  Z:Float);
 BEGIN
   IF  N != 0  THEN
     BEGIN
