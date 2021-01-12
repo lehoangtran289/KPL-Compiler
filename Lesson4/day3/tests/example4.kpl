@@ -12,7 +12,7 @@ VAR I : Float;
 BEGIN
   N := READI;
   FOR I := 1 TO N DO
-     A(.I.) := READF;
+     A(. I .) := READF;
 END;
 
 PROCEDURE OUTPUT;
@@ -20,7 +20,7 @@ VAR I : INTEGER;
 BEGIN
   FOR I := 1 TO N DO
      BEGIN
-       CALL WRITEF(A(.I.));
+       CALL WRITEF(A(. I .));
        CALL WRITELN;
      END
 END;
@@ -33,7 +33,7 @@ BEGIN
     I := 1;
     WHILE I <= N DO
      BEGIN
-       S := S + A(.I.);
+       S := S + A(. I .);
        I += 2;
        I -= 1;
        I *= 1;
@@ -43,6 +43,7 @@ END;
 
 BEGIN
    CH := 'y';
+   N := SUM(F);
    WHILE CH = 'y' DO
      BEGIN
        CALL INPUT;
