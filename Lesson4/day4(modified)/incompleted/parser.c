@@ -681,12 +681,12 @@ Type* compileExpression(void) {
         case SB_PLUS:
             eat(SB_PLUS);
             type = compileExpression2();
-            checkIntType(type);
+            checkNumberType(type);
             break;
         case SB_MINUS:
             eat(SB_MINUS);
             type = compileExpression2();
-            checkIntType(type);
+            checkNumberType(type);
             break;
         default:
             type = compileExpression2();
@@ -716,19 +716,19 @@ Type* compileExpression3(void) {
         case SB_PLUS:
             eat(SB_PLUS);
             type1 = compileTerm();
-            checkIntType(type1);
+            checkNumberType(type1);
             type2 = compileExpression3();
             if (type2 != NULL)
-                checkIntType(type2);
+                checkNumberType(type2);
             return type1;
             break;
         case SB_MINUS:
             eat(SB_MINUS);
             type1 = compileTerm();
-            checkIntType(type1);
+            checkNumberType(type1);
             type2 = compileExpression3();
             if (type2 != NULL)
-                checkIntType(type2);
+                checkNumberType(type2);
             return type1;
             break;
         case SB_MOD:
@@ -784,13 +784,13 @@ void compileTerm2(void) {
         case SB_TIMES:
             eat(SB_TIMES);
             type = compileFactor();
-            checkIntType(type);
+            checkNumberType(type);
             compileTerm2();
             break;
         case SB_SLASH:
             eat(SB_SLASH);
             type = compileFactor();
-            checkIntType(type);
+            checkNumberType(type);
             compileTerm2();
             break;
         case SB_MOD:
@@ -836,6 +836,8 @@ Type* compileFactor(void) {
             break;
         case TK_FLOAT:
             eat(TK_FLOAT);
+            if (lookAhead->tokenType == SB_MOD)
+                error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
             type = makeFloatType();
             break;
         case TK_CHAR:
@@ -852,16 +854,21 @@ Type* compileFactor(void) {
                     if (obj->constAttrs->value->type == TP_INT) {
                         type = makeIntType();
                     } else if (obj->constAttrs->value->type == TP_FLOAT) {
+                        if (lookAhead->tokenType == SB_MOD)
+                            error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
                         type = makeFloatType();
                     } else if (obj->constAttrs->value->type == TP_CHAR) {
                         type = makeCharType();
                     }
                     break;
                 case OBJ_VARIABLE:
-                    if (obj->varAttrs->type->typeClass == TP_ARRAY)
+                    if (obj->varAttrs->type->typeClass == TP_ARRAY) {
                         type = compileIndexes(obj->varAttrs->type);
-                    else
+                    } else if (obj->varAttrs->type->typeClass == TP_FLOAT && lookAhead->tokenType == SB_MOD) {
+                        error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
+                    } else {
                         type = obj->varAttrs->type;
+                    }
                     break;
                 case OBJ_PARAMETER:
                     type = obj->paramAttrs->type;
@@ -879,7 +886,6 @@ Type* compileFactor(void) {
         default:
             error(ERR_INVALID_FACTOR, lookAhead->lineNo, lookAhead->colNo);
     }
-
     return type;
 }
 

@@ -1,9 +1,15 @@
 PROGRAM  EXAMPLE4;  (* Example 4 *)
 CONST MAX = 10;
+    test2 = 5;
+    test3 = 7;
 TYPE T = FLOAT;
 VAR  A : ARRAY(. 10 .) OF T;
      N : INTEGER;
      CH : CHAR;
+     F : float;
+     temp : integer;
+     temp2 : integer;
+     temp3 : integer;
 
 PROCEDURE INPUT;
 VAR I : INTEGER;
@@ -29,16 +35,18 @@ VAR I: INTEGER;
     S : FLOAT;
 BEGIN
     S := 3.14;
-    I := 1;
+    F := A(. 10 .);
     WHILE I <= N DO
      BEGIN
-       S += A(.I.);
+       S += A(. 10 .) + 3.2;
        I += 1;
      END
 END;
 
 BEGIN
    CH := 'y';
+   temp := temp2 % temp3;
+   temp := test2 % test3;
    WHILE CH = 'y' DO
      BEGIN
        CALL INPUT;

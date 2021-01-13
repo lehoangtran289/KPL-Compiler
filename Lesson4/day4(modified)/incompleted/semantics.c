@@ -123,10 +123,17 @@ Object* checkDeclaredLValueIdent(char* name) {
     return obj;
 }
 
+void checkNumberType(Type* type) {
+    if (type->typeClass != TP_INT && type->typeClass != TP_FLOAT) {
+        error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
+    }
+}
+
 void checkIntType(Type* type) {
     // TODO
-    if (type->typeClass != TP_INT && type->typeClass != TP_FLOAT)
+    if (type->typeClass != TP_INT) {
         error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
+    }
 }
 
 void checkFloatType(Type* type) {
