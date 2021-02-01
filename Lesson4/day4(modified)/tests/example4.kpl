@@ -1,14 +1,19 @@
 PROGRAM  EXAMPLE4;  (* Example 4 *)
 CONST MAX = 10;
-TYPE T = Float;
+    test2 = 5;
+    test3 = 7;
+TYPE T = FLOAT;
 VAR  A : ARRAY(. 10 .) OF T;
      N : INTEGER;
-     F : FLOAT;
      CH : CHAR;
+     F : float;
+     temp : integer;
+     temp2 : integer;
+     temp3 : integer;
 
 PROCEDURE INPUT;
-VAR I : Float;
-    TMP : Float;
+VAR I : INTEGER;
+    TMP : FLOAT;
 BEGIN
   N := READI;
   FOR I := 1 TO N DO
@@ -25,29 +30,28 @@ BEGIN
      END
 END;
 
-FUNCTION SUM : Float;
+FUNCTION SUM : FLOAT;
 VAR I: INTEGER;
-    S : Float;
+    S : FLOAT;
 BEGIN
-    S := 0;
-    I := 1;
+    S := 3.14;
+    F := A(. 10 .);
     WHILE I <= N DO
      BEGIN
-       S := S + A(. I .);
-       I += 2;
-       I -= 1;
-       I *= 1;
-       I /= 1;
+       S += A(. 10 .) + 3.2;
+       I += 1;
      END
 END;
 
 BEGIN
    CH := 'y';
-   N := SUM(F);
+   temp := temp2 % temp3;
+   temp := test2 % test3;
    WHILE CH = 'y' DO
      BEGIN
        CALL INPUT;
        CALL OUTPUT;
-       CALL WRITEI(SUM);
+       CALL WRITEF(SUM);
+       CH := READC;
      END
 END.  (* Example 4 *)
